@@ -1,0 +1,27 @@
+{
+  "name": "callmelater",
+  "version": "1.0.0",
+  "description": "A simple service to schedule a POST request to your service",
+  "main": "index.js",
+  "scripts": {
+    "build": "tsc",
+    "dev": "ts-node ./lib/server.ts",
+    "start": "nodemon ./dist/server.js",
+    "prod": "npm run build && npm run start"
+  },
+  "keywords": [
+    "scheduler"
+  ],
+  "author": "Thorsten Pohl",
+  "license": "MIT",
+  "dependencies": {
+    "@types/express": "^4.16.0",
+    "@types/request-promise-native": "^1.0.15",
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "mongoose": "^5.3.11",
+    "nodemon": "^1.18.6",
+    "request": "^2.88.0",
+    "request-promise-native": "^1.0.5"
+  }
+}
