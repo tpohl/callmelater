@@ -12,6 +12,7 @@ export class TaskController {
             if (err) {
                 res.send(err);
             }
+            console.log('Scheduled Task', task);
             res.json(task);
         });
     }
