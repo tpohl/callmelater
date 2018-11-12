@@ -16,7 +16,6 @@ COPY . /home/app
 
 # Install
 RUN npm run build
-RUN cd client && npm run build
 
 # Set development environment as default
 ENV NODE_ENV production
