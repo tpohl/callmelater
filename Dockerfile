@@ -8,7 +8,6 @@ WORKDIR /home/app
 ADD package.json /home/app/package.json
 
 RUN npm install
-RUN cd client && npm install
 
 
 
