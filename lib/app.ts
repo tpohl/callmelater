@@ -10,14 +10,12 @@ const MONGODB_URI = process.env.MONGODB_URI = process.env.MONGODB_URI || 'mongod
 
 const tick = function () {
     console.log('Cron Tick');
-    Task.find({}).where('scheduled_date').lt(new Date()).exec((err, taskArray) => {
-        taskArray.forEach(task => {
-
-            console.log('Found Task', task);
-            // Execute it;
-            if (task.retry > 5) {
-                console.warn('Task not executed, retry is over limit.');
-            } else {
+    Task.find({})
+        .where('scheduled_date').lt(new Date())
+        .where('retry').lt(6)
+        .exec((err, taskArray) => {
+            taskArray.forEach(task => {
+                console.log('Found Task', task);
                 request({
                     method: 'POST',
                     uri: task.url,
@@ -48,7 +46,7 @@ const tick = function () {
                 });
             }
         });
-    });
+});
 }
 
 class App {
