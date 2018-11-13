@@ -37,12 +37,12 @@ const tick = function () {
                 }, err => {
                     console.error('Cannot Execute Task', err, task);
                     task.retry = task.retry ? (task.retry + 1) : 1;
-                    Task.findOneAndUpdate({ _id: task._id }, task, { new: true }, (err, task) => {
+                    Task.findOneAndUpdate({ _id: task._id }, task, { new: true }, (err, tasknew) => {
                         if (err) {
                             console.error('Adding retry failed', err, task);
                         }
                         else {
-                            console.log('Updated retry for task', task.retry, task._id);
+                            console.log('Updated retry for task', tasknew.retry, task.retry, task._id);
                         }
                     });
                 });
