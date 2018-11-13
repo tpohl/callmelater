@@ -18,6 +18,10 @@ export const TaskSchema = new Schema({
     created_date: {
         type: Date,
         default: Date.now
+    },
+    retry: {
+        type: Number,
+        default: 0
     }
 });
 

@@ -14,27 +14,39 @@ const tick = function () {
         taskArray.forEach(task => {
 
             console.log('Found Task', task);
-            // TODO Execute it;
-            request({
-                method: 'POST',
-                uri: task.url,
-                body: task.payload,
-                json: false,
-                headers: {
-                    'content-type': 'text/plain'
-                }
-            }).then((result) => {
-                console.log('Executed Task', task);
-                Task.remove({ _id: task._id }, (err, t2) => {
-                    if (err) {
-                        console.error('Could not delete task', task)
+            // Execute it;
+            if (task.retry > 5) {
+                console.warn('Task not executed, retry is over limit.');
+            } else {
+                request({
+                    method: 'POST',
+                    uri: task.url,
+                    body: task.payload,
+                    json: false,
+                    headers: {
+                        'content-type': 'text/plain'
                     }
+                }).then((result) => {
+                    console.log('Executed Task', task);
+                    Task.remove({ _id: task._id }, (err, t2) => {
+                        if (err) {
+                            console.error('Could not delete task', task)
+                        }
 
+                    });
+                }, err => {
+                    console.error('Cannot Execute Task', err, task);
+                    task.retry = task.retry ? (task.retry + 1) : 0;
+                    Task.findOneAndUpdate({ _id: task._id }, task, { new: true }, (err, task) => {
+                        if (err) {
+                            console.error('Adding retry failed', err, task);
+                        }
+                        else {
+                            console.log('Updated retry for task', task.retry, task._id);
+                        }
+                    });
                 });
-            }, err => {
-                console.error('Cannot Execute Task', task);
-            });
-
+            }
         });
     });
 }
@@ -59,7 +71,7 @@ class App {
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: false }));
         // Schedule the Cron
-        this.cron = new CronJob(`* * * * *`, tick).start();
+        this.cron = new CronJob(`*/5 * * * *`, tick).start();
     }
 
 
